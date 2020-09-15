@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TreeViewXamarin"
+             xmlns:treeview="clr-namespace:Syncfusion.XForms.TreeView;assembly=Syncfusion.SfTreeView.XForms"
+             xmlns:sfbusyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
+             x:Class="TreeViewXamarin.MainPage" Padding="0,20,0,0">
+    <ContentPage.BindingContext>
+        <local:MusicInfoRepository x:Name="viewModel"/>
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:ExpanderIconVisibilityConverter x:Key="ExpanderIconVisibilityConverter"/>
+            <local:ExpanderIconConverter x:Key="ExpanderIconConverter" />
+            <local:IndicatorColorConverter x:Key="IndicatorColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Behaviors>
+        <local:Behavior/>
+    </ContentPage.Behaviors>
+    <ContentPage.Content>
+        <treeview:SfTreeView x:Name="treeView" ExpanderWidth="0" ItemTemplateContextType="Node" LoadOnDemandCommand="{Binding TreeViewOnDemandCommand}" ItemsSource="{Binding Menu}">
+            <treeview:SfTreeView.ItemTemplate>
+                <DataTemplate>
+                    <Grid x:Name="grid" Padding="5,5,5,5" BackgroundColor="White">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="1" Padding="1,0,0,0" VerticalOptions="Center">
+                            <Label LineBreakMode="NoWrap" TextColor="Black" Text="{Binding Content.ItemName}" FontSize="20" VerticalTextAlignment="Center"/>
+                        </Grid>
+                        <Grid >
+                            <Image Source="{Binding IsExpanded, Converter={StaticResource ExpanderIconConverter}}"
+                                   IsVisible="{Binding HasChildNodes, Converter={StaticResource ExpanderIconVisibilityConverter}}"
+                                   VerticalOptions="Center" HorizontalOptions="Center" HeightRequest="35" WidthRequest="35">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                                </Image.GestureRecognizers>
+                            </Image>
+                            <Grid IsVisible="{Binding Content.IsInAnimation, Mode=TwoWay}">
+                                <sfbusyindicator:SfBusyIndicator x:Name="grid1" TextColor="{Binding Level, Converter={StaticResource IndicatorColorConverter}}" 
+                                                                 IsBusy="True" Margin="2" BackgroundColor="White" ViewBoxHeight="25" ViewBoxWidth="25" HeightRequest="32" AnimationType="SingleCircle"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </treeview:SfTreeView.ItemTemplate>
+        </treeview:SfTreeView>
+    </ContentPage.Content>
+</ContentPage>
